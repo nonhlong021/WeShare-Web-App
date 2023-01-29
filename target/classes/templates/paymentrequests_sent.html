@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/layout.html}">
+<head></head>
+<body>
+<div layout:fragment="contents">
+    <section class="expenseList">
+        <h2>People that owe me</h2>
+        <p id="no_expense" th:if="${#lists.isEmpty(paymentRequestsSent)}">Nobody owes you anything!</p>
+        <th:block th:if="!${#lists.isEmpty(paymentRequestsSent)}">
+            <table>
+                <th>Who</th>
+                <th>What</th>
+                <th>Due in (days)</th>
+                <th>How Much</th>
+
+                <tbody>
+                <tr th:each="paymentRequestsSent:${paymentRequestsSent}">
+                    <td th:text="${paymentRequestsSent.getPersonWhoShouldPayBack().getName()}"></td>
+
+                    <td th:text="${paymentRequestsSent.getExpense().getDescription()}"></td>
+
+                    <td th:text="${paymentRequestsSent.daysLeftToPay()}"></td>
+
+                    <td th:text="${paymentRequestsSent.getAmountToPay()}"></td>
+
+                </tr>
+                </tbody>
+
+                <tfoot>
+                <td colspan="3"> Total Unpaid</td>
+                <td id="total" th:text="${totalUnpaid}">R100</td>
+                </tfoot>
+            </table>
+        </th:block>
+    </section>
+</div>
+</body>
+
+</html>

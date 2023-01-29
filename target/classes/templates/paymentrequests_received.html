@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/layout.html}">
+<head></head>
+<body>
+<div layout:fragment="contents">
+    <section class="expenseList">
+        <h2>People that you owe</h2>
+        <p id="no_expenses" th:if="${#lists.isEmpty(paymentRequestsReceived)}">You don't owe anyone anything!</p>
+        <th:block th:if="!${#lists.isEmpty(paymentRequestsReceived)}">
+            <table>
+                <th>Who</th>
+                <th>What</th>
+                <th>Due in (days)</th>
+                <th>How Much</th>
+
+                <tbody>
+                <tr th:each="paymentRequestsReceived:${paymentRequestsReceived}">
+                    <td th:text="${paymentRequestsReceived.getPersonRequestingPayment().getName()}"></td>
+
+                    <td th:text="${paymentRequestsReceived.getExpense().getDescription()}"></td>
+
+                    <td th:text="${paymentRequestsReceived.daysLeftToPay()}"></td>
+
+                    <td th:text="${paymentRequestsReceived.getAmountToPay()}"></td>
+
+                    <td th:if="!${paymentRequestsReceived.isPaid()}"><form method="post" action = "/payment.action" enctype = "application/x-www-form-urlencoded">
+<!--                        <input type="hidden" id="email" name="email" value="${paymentRequestsReceived.getPersonRequestingPayment().getEmail()}">-->
+<!--                        <input type="hidden" id="description" name="description" th:value="${paymentRequestsReceived.getExpense().getDescription()}">-->
+<!--                        <input type="hidden" id="date" name="date" th:value="${paymentRequestsReceived.getDueDate()}">-->
+<!--                        <input type="hidden" id="amount" name="amount" th:value="${paymentRequestsReceived.getAmountToPay()}">-->
+                        <input type="hidden" id="id" name="id" th:value="${paymentRequestsReceived.getId()}">
+                        <input id="submit" type="submit" value="Pay"/>
+                    </form></td>
+                    <td th:unless="!${paymentRequestsReceived.isPaid()}"><form>
+                        <input type="radio" checked readonly>
+                    </form></td>
+
+                </tr>
+                </tbody>
+
+                <tfoot>
+                <td colspan="3"> Total Unpaid</td>
+                <td id="total" th:text="${totalUnpaid}">R100</td>
+                </tfoot>
+            </table>
+        </th:block>
+    </section>
+</div>
+</body>
+
+</html>
